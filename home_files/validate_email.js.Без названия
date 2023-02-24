@@ -1,0 +1,29 @@
+jQuery(document).ready(function(){
+	var response;
+	jQuery.validator.addMethod("validateemail",function(value, element) {
+        jQuery.ajax({  
+        	type: "POST",
+            url: siteUrl+"include/validate_email.php",
+            data: {email:value},
+            dataType:"JSON",
+            success: function(resp){
+                response = (resp.flag == '1') ? true : false;
+                if(response == false){jQuery("#"+element.id+"-error").html(resp.msg);}
+            }
+         });
+        return response;
+    },"");
+    jQuery.validator.addMethod("validatedisposableonly",function(value, element) {
+        jQuery.ajax({  
+            type: "POST",
+            url: siteUrl+"include/validate_email.php",
+            data: {email:value,d:true},
+            dataType:"JSON",
+            success: function(resp){
+                response = (resp.flag == '1') ? true : false;
+                if(response == false){jQuery("#"+element.id+"-error").html(resp.msg);}
+            }
+         });
+        return response;
+    },"");
+});

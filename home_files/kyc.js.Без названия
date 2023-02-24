@@ -1,0 +1,1333 @@
+var formActionUrl = "https://pdb.kyc2020.com/",
+    captchaUrlPath = "https://pdb.kyc2020.com/kyc/captcha/",
+    websiteUrl = "https://www.kyc2020.com/",
+    currentUrl = $(location).attr("href"),
+    Base64 = {
+        _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+        encode: function (e) {
+            var a,
+                t,
+                r,
+                i,
+                n,
+                s,
+                o = "",
+                l = 0;
+            for (e = Base64._utf8_encode(e); l < e.length; )
+                (r = (s = e.charCodeAt(l++)) >> 2),
+                    (i = ((3 & s) << 4) | ((a = e.charCodeAt(l++)) >> 4)),
+                    (n = ((15 & a) << 2) | ((t = e.charCodeAt(l++)) >> 6)),
+                    (s = 63 & t),
+                    isNaN(a) ? (n = s = 64) : isNaN(t) && (s = 64),
+                    (o = o + this._keyStr.charAt(r) + this._keyStr.charAt(i) + this._keyStr.charAt(n) + this._keyStr.charAt(s));
+            return o;
+        },
+        decode: function (e) {
+            var a,
+                t,
+                r,
+                i,
+                n,
+                s = "",
+                o = 0;
+            for (e = e.replace(/[^A-Za-z0-9+\/=]/g, ""); o < e.length; )
+                (a = (this._keyStr.indexOf(e.charAt(o++)) << 2) | ((r = this._keyStr.indexOf(e.charAt(o++))) >> 4)),
+                    (t = ((15 & r) << 4) | ((i = this._keyStr.indexOf(e.charAt(o++))) >> 2)),
+                    (r = ((3 & i) << 6) | (n = this._keyStr.indexOf(e.charAt(o++)))),
+                    (s += String.fromCharCode(a)),
+                    64 != i && (s += String.fromCharCode(t)),
+                    64 != n && (s += String.fromCharCode(r));
+            return Base64._utf8_decode(s);
+        },
+        _utf8_encode: function (e) {
+            e = e.replace(/rn/g, "n");
+            for (var a = "", t = 0; t < e.length; t++) {
+                var r = e.charCodeAt(t);
+                r < 128
+                    ? (a += String.fromCharCode(r))
+                    : (127 < r && r < 2048 ? (a += String.fromCharCode((r >> 6) | 192)) : ((a += String.fromCharCode((r >> 12) | 224)), (a += String.fromCharCode(((r >> 6) & 63) | 128))), (a += String.fromCharCode((63 & r) | 128)));
+            }
+            return a;
+        },
+        _utf8_decode: function (e) {
+            for (var a = "", t = 0, r = (c1 = c2 = 0); t < e.length; )
+                (r = e.charCodeAt(t)) < 128
+                    ? ((a += String.fromCharCode(r)), t++)
+                    : 191 < r && r < 224
+                    ? ((c2 = e.charCodeAt(t + 1)), (a += String.fromCharCode(((31 & r) << 6) | (63 & c2))), (t += 2))
+                    : ((c2 = e.charCodeAt(t + 1)), (c3 = e.charCodeAt(t + 2)), (a += String.fromCharCode(((15 & r) << 12) | ((63 & c2) << 6) | (63 & c3))), (t += 3));
+            return a;
+        },
+    },captchaErrorMsg = "Please verify the captcha.",validMathCaptchaMsg = "Validation complete",invalidMathCaptchaMsg = "Invalid answer",errorDisposableEmail = "Please do not use Disposable/Spam Emails!",errorCorporateEmail = "Please use your corporate/company Emails!",siteUrl ="https://www.kyc2020.com/",invalidEmailError="This is not a valid email address.",oldLoginformActionUrl ="https://pdb.kyc2020.com/";
+function submitSignUpForm() {
+    var e = $("#regEmail").val(),
+        a = $("#regpwd").val(),
+        t = $("#regcpass").val();
+    return (
+        $("#captcha").val(),
+        $("#captchaKey").val(),
+        -1 != e.indexOf("'")
+            ? ($("#emailError").html("Please enter a valid email address."), grecaptcha.reset())
+            : isEmailAddressValid(e)
+            ? !(/[0-9]/.test(a) && /[a-z]/.test(a) && /[A-Z]/.test(a)) || /[~`|â€¢âˆšÏ€Ã·Ã—Â¶âˆ†Â£â‚¬Â¢^Â°={}\%Â©Â®â„¢âœ“>>:?]/.test(a)
+                ? ($("#passError").html("1. Password should be between 8 to 16 characters only.<br>2. It should contain atleast 1 upper case letter,1 lower case letter, 1 numeric value and special characters(!@#$^&)."),
+                  $("#regpwd").focus(),
+                  grecaptcha.reset())
+                : parseInt(a.length) < 8 || 16 < parseInt(a.length)
+                ? ($("#passError").html("1. Password should be between 8 to 16 characters only.<br>2. It should contain atleast 1 upper case letter,1 lower case letter , 1 numeric value and special characters(!@#$^&)."),
+                  $("#regpwd").focus(),
+                  grecaptcha.reset())
+                : parseInt(t.length) < 8 || 16 < parseInt(t.length)
+                ? ($("#passError").html("1. Password should be between 8 to 16 characters only.<br>2. It should contain atleast 1 upper case letter,1 lower case letter, 1 numeric value and special characters(!@#$^&)."),
+                  $("#regpwd").focus(),
+                  grecaptcha.reset())
+                : a == t || ($("#passError").html("Password and Confirm Password must be same."), $("#regpwd").focus(), grecaptcha.reset())
+            : ($("#emailError").html("Please enter a valid email address."), $("#regEmail").focus(), grecaptcha.reset())
+    );
+}
+function EmailVerficationApi(e) {
+    return !0;
+}
+function isEmailAddressValid(e) {
+    var a = e,
+        t = ".",
+        r = a.indexOf("@"),
+        e = a.length;
+    return (
+        a.indexOf(t),
+        -1 != a.indexOf(t) && 0 != a.indexOf(t) && a.indexOf(t) != e && -1 == a.indexOf("@", r + 1) && a.substring(r - 1, r) != t && a.substring(r + 1, r + 2) != t && -1 != a.indexOf(t, r + 2) && -1 == a.indexOf(" ") && !!ValidateEmail(a)
+    );
+}
+function ValidateEmail(e) {
+    return /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,24}|[0-9]{1,3})(\]?)$/.test(e);
+}
+function recaptchaCallback() {
+    var e = grecaptcha.getResponse();
+    //jQuery("#hidden-grecaptcha").val(e);
+    jQuery('input[name="hidden-grecaptcha"]').val(e);
+    jQuery('input[name="hidden-grecaptcha"]').valid();
+}
+function recaptchaExpired() {
+    ($button = jQuery("#signupSubmit")), jQuery('input[name="hidden-grecaptcha"]').val("");
+}
+function dialogSignupSubmit() {
+    $("#resultLoading").css("display", "block");
+    var e = $("[name=UserProf_Email]").val(),
+        a = $("[name=UserProf_FName]").val(),
+        t = $("[name=UserProf_LName]").val(),
+        r = $("[name=UserProf_Pwd]").val(),
+        i = $("[name=verPassword]").val(),
+        n = $("[name=UserProf_Company]").val(),
+        s = $("[name=UserProf_City]").val(),
+        o = $("[name=UserProf_State]").val(),
+        l = $("[name=UserProf_Country]").val(),
+        c = $("[name=UserProf_WrkPhn]").val(),
+        p = $("[name=UserProf_HmPhn]").val(),
+        d = $("[name=UserProf_address]").val(),
+        u = $("[name=UserProf_CellPhn]").val(),
+        m = $("[name=UserProf_Zip]").val(),
+        h = $("[name=UserProf_Type]").val(),
+        g = $("#UserProf_period").val(),
+        v = $("#UserProf_paidamount").val(),
+        f = $("#UserProf_SubId").val(),
+        y = $("#newsletter").val(),
+        P = $("#timezone").val(),
+        _ = $("#UserProf_plan").val(),
+        r = Base64.encode(r),
+        i = Base64.encode(i);
+    $(
+        "<form action=" +
+            formActionUrl +
+            'Servlet id="myForm" method="POST"><input type="hidden" name="Action" value="paidRegister"/><input type="hidden" name="UserProf_Email" value="' +
+            e +
+            '"/><input type="hidden" name="UserProf_FName"  \tvalue="' +
+            a +
+            '"/><input type="hidden" name="UserProf_LName"  \tvalue="' +
+            t +
+            '"/><input type="hidden" name="UserProf_Pwd"  \t    value="' +
+            r +
+            '"/><input type="hidden" name="verPassword"  \t    value="' +
+            i +
+            '"/><input type="hidden" name="UserProf_Company"  \tvalue="' +
+            n +
+            '"/><input type="hidden" name="UserProf_City"  \tvalue="' +
+            s +
+            '"/><input type="hidden" name="UserProf_State"  \tvalue="' +
+            o +
+            '"/><input type="hidden" name="UserProf_Country"  \tvalue="' +
+            l +
+            '"/><input type="hidden" name="UserProf_WrkPhn"  \tvalue="' +
+            c +
+            '"/><input type="hidden" name="UserProf_HmPhn"  \tvalue="' +
+            p +
+            '"/><input type="hidden" name="UserProf_address"  \tvalue="' +
+            d +
+            '"/><input type="hidden" name="UserProf_CellPhn"  \tvalue="' +
+            u +
+            '"/><input type="hidden" name="UserProf_Zip"  \t    value="' +
+            m +
+            '"/><input type="hidden" name="UserProf_Type"  \tvalue="' +
+            h +
+            '"/><input type="hidden" name="UserProf_period"  \tvalue="' +
+            g +
+            '"/><input type="hidden" name="UserProf_paidamount"  \tvalue="' +
+            v +
+            '"/><input type="hidden" name="UserProf_SubId"  \tvalue="' +
+            f +
+            '"/><input type="hidden" name="newsletter"  \tvalue="' +
+            y +
+            '"/><input type="hidden" name="UserProfile_Tmzn"  \tvalue="' +
+            P +
+            '"/><input type="hidden" name="UserProf_plan"  \tvalue="' +
+            _ +
+            '"/></form>'
+    )
+        .appendTo($(document.body))
+        .submit();
+}
+function dialogSignupClose() {
+    $("#dailogSignupMessage").modal("hide");
+}
+function closeDialog() {
+    $("#resultLoading").css("display", "block");
+    var e = $("#username").val(),
+        a = $("#password").val(),
+        a = Base64.encode(a),
+        t = $("#donotshow").is(":checked");
+    $(
+        "<form action=" +
+            oldLoginformActionUrl +
+            'Servlet id="myForm" method="POST"><input type="hidden" name="Action" value="listSearch"/><input type="hidden" name="UserProf_Email" value="' +
+            e +
+            '"/><input type="hidden" name="UserProf_Pwd"  \tvalue="' +
+            a +
+            '"/><input type="hidden" name="addcat_lst"  \tvalue="no"/><input type="hidden" name="rememberDialog"  \tvalue="' +
+            t +
+            '"/></form>'
+    )
+        .appendTo($(document.body))
+        .submit();
+}
+function dialogCancel() {
+    $("#resultLoading").css("display", "block");
+    var e = $("#username").val(),
+        a = $("#password").val(),
+        t = $("#donotshow").is(":checked"),
+        a = Base64.encode(a);
+    $(
+        "<form action=" +
+            oldLoginformActionUrl +
+            'Servlet id="myForm" method="POST"><input type="hidden" name="Action" value="listSearch"/><input type="hidden" name="UserProf_Email" value="' +
+            e +
+            '"/><input type="hidden" name="UserProf_Pwd"  \tvalue="' +
+            a +
+            '"/><input type="hidden" name="addcat_lst"  \tvalue="no"/><input type="hidden" name="rememberDialog"  \tvalue="' +
+            t +
+            '"/></form>'
+    )
+        .appendTo($(document.body))
+        .submit();
+}
+function dialogSubmit() {
+    $("#resultLoading").css("display", "block");
+    var e = $("#username").val(),
+        a = $("#password").val(),
+        a = Base64.encode(a),
+        t = $("#donotshow").is(":checked");
+    $(
+        "<form action=" +
+            oldLoginformActionUrl +
+            'Servlet id="myForm" method="POST"><input type="hidden" name="Action" value="listSearch"/><input type="hidden" name="UserProf_Email" value="' +
+            e +
+            '"/><input type="hidden" name="UserProf_Pwd"  \tvalue="' +
+            a +
+            '"/><input type="hidden" name="addcat_lst"  \tvalue="yes"/><input type="hidden" name="rememberDialog"  \tvalue="' +
+            t +
+            '"/></form>'
+    )
+        .appendTo($(document.body))
+        .submit();
+}
+function submitPaidForm(e) {
+    "free" == e &&
+        ($("#free").attr("data-target", "#sign-up"),
+        $("#signupPriceForm").find("input[type=text],input[type=checkbox],input[type=radio],input[type=email],input[type=password],input[type=number],textarea, select").val(""),
+        $("#headerfree").attr("data-target", "#sign-up"),
+        $("#comparefree").attr("data-target", "#sign-up"),
+        $("#signupFromLog").attr("data-target", "#sign-up"),
+        $("#frstwhitelable").attr("data-target", "#sign-up"),
+        $("#whitelable").attr("data-target", "#sign-up"),
+        $("#UserProf_paidamount").val("0"),
+        $("#UserProf_plan").val("Free"),
+        $("#UserProf_SubId").val("1"),
+        $("#UserProf_period").val("30"),
+        $("#UserProf_Type").val("2")),
+        "payper249" == e &&
+            ($("#pay249").attr("data-target", "#sign-up"),
+            $("#signupPriceForm").find("input[type=text],input[type=checkbox],input[type=radio],input[type=email],input[type=password],input[type=number],textarea, select").val(""),
+            $("#comparepay249").attr("data-target", "#sign-up"),
+            $("#UserProf_paidamount").val("$249"),
+            $("#UserProf_plan").val("$249"),
+            $("#UserProf_SubId").val("1"),
+            $("#UserProf_period").val("30"),
+            $("#UserProf_Type").val("2"),
+            $("#action").val("paidRegister")),
+        "payper149" == e &&
+            ($("#pay149").attr("data-target", "#sign-up"),
+            $("#signupPriceForm").find("input[type=text],input[type=checkbox],input[type=radio],input[type=email],input[type=password],input[type=number],textarea, select").val(""),
+            $("#comparepay149").attr("data-target", "#sign-up"),
+            $("#UserProf_paidamount").val("$149"),
+            $("#UserProf_plan").val("$149"),
+            $("#UserProf_SubId").val("1"),
+            $("#UserProf_period").val("30"),
+            $("#UserProf_Type").val("2"),
+            $("#action").val("paidRegister")),
+        "payper99" == e &&
+            ($("#pay99").attr("data-target", "#sign-up"),
+            $("#signupPriceForm").find("input[type=text],input[type=checkbox],input[type=radio],input[type=email],input[type=password],input[type=number],textarea, select").val(""),
+            $("#comparepay99").attr("data-target", "#sign-up"),
+            $("#UserProf_paidamount").val("$99"),
+            $("#UserProf_plan").val("$99"),
+            $("#UserProf_SubId").val("1"),
+            $("#UserProf_period").val("30"),
+            $("#UserProf_Type").val("2"),
+            $("#action").val("paidRegister")),
+        "standard" == e &&
+            ($("#standard").attr("data-target", "#sign-up"),
+            $("#signupPriceForm").find("input[type=text],input[type=checkbox],input[type=radio],input[type=email],input[type=password],input[type=number],textarea, select").val(""),
+            $("#comparestandard").attr("data-target", "#sign-up"),
+            $("#UserProf_paidamount").val("$1499"),
+            $("#UserProf_plan").val("$1499"),
+            $("#UserProf_SubId").val("1"),
+            $("#UserProf_period").val("30"),
+            $("#UserProf_Type").val("2"),
+            $("#action").val("paidRegister")),
+        "enhanced" == e &&
+            (getCaptcha(),
+            $("#enhanced").attr("data-target", "#sign-up"),
+            $("#signupPriceForm").find("input[type=text],input[type=checkbox],input[type=radio],input[type=email],input[type=password],input[type=number],textarea, select").val(""),
+            $("#compareenhanced").attr("data-target", "#sign-up"),
+            $("#UserProf_paidamount").val("$1999"),
+            $("#UserProf_plan").val("$1999"),
+            $("#UserProf_SubId").val("1"),
+            $("#UserProf_period").val("30"),
+            $("#UserProf_Type").val("2"),
+            $("#action").val("paidRegister")),
+        "premium" == e &&
+            ($("#premium").attr("data-target", "#sign-up"),
+            $("#signupPriceForm").find("input[type=text],input[type=checkbox],input[type=radio],input[type=email],input[type=password],input[type=number],textarea, select").val(""),
+            $("#comparepremium").attr("data-target", "#sign-up"),
+            $("#UserProf_paidamount").val("$2999"),
+            $("#UserProf_plan").val("$2999"),
+            $("#UserProf_SubId").val("1"),
+            $("#UserProf_period").val("30"),
+            $("#UserProf_Type").val("2"),
+            $("#action").val("paidRegister")),
+        "ultimate" == e &&
+            ($("#ultimate").attr("data-target", "#sign-up"),
+            $("#signupPriceForm").find("input[type=text],input[type=checkbox],input[type=radio],input[type=email],input[type=password],input[type=number],textarea, select").val(""),
+            $("#compareultimate").attr("data-target", "#sign-up"),
+            $("#UserProf_paidamount").val("$7499"),
+            $("#UserProf_plan").val("$7499"),
+            $("#UserProf_SubId").val("1"),
+            $("#UserProf_period").val("365"),
+            $("#UserProf_Type").val("2"),
+            $("#action").val("paidRegister"));
+}
+function refreshCaptchaB() {
+    getCaptcha();
+}
+function signupfree() {
+    $("#signupForm").find("input[type=text],input[type=checkbox],input[type=radio],input[type=email],input[type=password],input[type=number],textarea, select").val(""),
+        $("#signupheader").attr("data-target", "#sign-up"),
+        $("#signupmdl").attr("data-target", "#sign-up"),
+        $("#signupfoot").attr("data-target", "#sign-up"),
+        $("#signupFromLog").attr("data-target", "#sign-up"),
+        $("#sign-up").focus();
+}
+function getCaptcha() {}
+function callbackCaptcha(e) {
+    $("#captchaToken").val(e.token), $("#captchaimg").attr("src", captchaUrlPath + "" + e.token + ".jpg"), $("#captchaimg").css("padding-top", "15px"), $("#captchaKey").val(e.capKey);
+}
+function getsmartSearch() {
+    if ("" == $("#searchDtls").val()) return $("#searchDtls").focus(), $("#smartSearchMsg").html("This field can't be empty."), !1;
+    var e = "";
+    $("#mustMatch").is(":checked") && (e = "Yes"),
+        $("#myModal1").modal("show"),
+        $("#dialogResultLoading").css("display", "block"),
+        $("#smartSearchresult").html(""),
+        $("#searchCriteriaHitsMsg").html(""),
+        $(".searchButton").attr("data-target", "#myModal1"),
+        $("#searchCriteria").html($("#searchDtls").val()),
+        $("#searchCriteria1").html($("#searchDtls").val());
+    var a = "Action=getSmartSearchResult&smartSearchData=" + $("#searchDtls").val() + "&mustMatch=" + e + "&searchType=" + $("#searchTypebox").val() + "&sid=" + Math.random(),
+        t = formActionUrl + "AuthUser?jsonp=callback",
+        e = callbackSmartSearch;
+    $("#searchCriteriaMsg").html("Searching"), ajaxCall(t, a, "GET", "callback", e, "errorfunction");
+}
+function ajaxCall(e, a, t, r, i, n) {
+    $.ajax({ url: e, type: t, headers: { "Access-Control-Allow-Origin": "*" }, data: a, crossDomain: !0, dataType: "jsonp", timeout: 6e4, jsonpCallback: r, async: !0, global: !1, success: i, error: n }).fail(function (e, a, t) {
+        (0 != e.readyState && 1 != e.readyState && 2 != e.readyState && 3 != e.readyState) ||
+            ($("#resultLoading").css("display", "none"),
+            $("#loginSubmit").attr("data-target", "#successSignup"),
+            $("#login").modal("hide"),
+            $("#headerMsg").html("Failure"),
+            $("#successDialogMsg").html(
+                "Currently we are experiencing  some issues with our website, it will be back up shortly. Please try after sometime or contact our support team via email at <a href='mailto:support@kyc2020.com'>support@kyc2020.com</a>"
+            ),
+            $(".modal").modal("hide"),
+            $("#successSignup").modal("show"),
+            $("#successSignup").focus());
+    });
+}
+function errorfunction() {
+    alert("Somthing Wrong! please try again later."), $("#resultLoading").css("display", "none");
+}
+function callbackSmartSearch(e) {
+    var i = "",
+        n = 1;
+    $("#searchCriteriaMsg").html("Search"),
+        $("#dialogResultLoading").css("display", "none"),
+        "No Search Hits" == e.Error
+            ? ($("#dialogResultLoading").css("display", "none"), $("#smartSearchresult").html("Can't find who you're looking for? Search our entire database in the members area."))
+            : $.each(e, function (e, a) {
+                  var t, r;
+                  "smartSearchHits" == e
+                      ? ((t = !0),
+                        (r = ""),
+                        $.each(a, function (e, a) {
+                            (t = !0),
+                                (r = "<b>List Name :</b> "),
+                                (i += "<div class='panel panel-default'>"),
+                                (i += "<a class='collapsed' data-parent='#accordion' >"),
+                                $.each(a, function (e, a) {
+                                    1 == t
+                                        ? ((i += "<div class='panel-heading'>"),
+                                          (i += "<h4 class='panel-title'>"),
+                                          (i += "<span class='marg' style='font-size: 16px; color: #000;margin-top: 0; margin-bottom: 0;'> " + a + "</span>"),
+                                          (i += "<i id='sign" + n + "' class='fa gray-plus' aria-hidden='true'></i>"),
+                                          (i += "</h4>"),
+                                          (i += "</div>"),
+                                          (i += "</a>"),
+                                          (i += "<div id='collap" + n + "'>"),
+                                          (i += "<div class='panel-body' class='collapse show'>"),
+                                          (t = !1))
+                                        : ((i += "<ul>"), (i += "<li>" + r + a + "</li>"), (i += "</ul>"), (r = "<b>Score :</b> "));
+                                }),
+                                (i += "</div></div></div>"),
+                                n++;
+                        }),
+                        $("#smartSearchresult").html(i))
+                      : "summary" == e && $("#searchCriteriaHitsMsg").html(a);
+              });
+}
+function submitSmartListForm() {
+    $("#smartListResultLoading").css("display", "block"), $("#listSearchOut").html(""), $("#mainSerach").html("");
+    var e,
+        t = "All",
+        r = $("#smartText").val(),
+        a = formActionUrl + "rest/kyc/searchlist",
+        i = "";
+    if (
+        ("" == r
+            ? ((e = "All" == $.trim(t) ? "All List" : "Sanction List" == $.trim(t) ? "Sanction List" : "Criminal List" == $.trim(t) ? "Criminal List" : "NoFly" == $.trim(t) ? "NoFly" : "PEP List"),
+              $("#smartSearchCriteria").removeClass("name-list").addClass("name-list-normal"),
+              $("#smartSearchCriteria").html(e))
+            : $("#smartSearchCriteria").html(r),
+        $("#smartlist").attr("data-target", "#myModal"),
+        "Filter by" == jQuery.trim(t))
+    )
+        return $("#resultLoading").css("display", "none"), $("#smartListMsg").text("Please select value from dropdown"), !1;
+    $("#myModal #result").hide(),
+        $.ajax({
+            url: a,
+            type: "POST",
+            data: JSON.stringify({ listType: jQuery.trim(t), smartListSearch: r }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (e) {
+                $("#smartListResultLoading").css("display", "none"),
+                    "" == r && (console.log(t), (r = "All" == $.trim(t) ? "All List" : "Sanction List" == $.trim(t) ? "Sanction List" : "Criminal List" == $.trim(t) ? "Criminal List" : "NoFly" == $.trim(t) ? "NoFly" : "PEP List"));
+                var a = '<span>Search : "' + r + '" </span>';
+                $("#mainSerach").html(a);
+                a = "<span><b>Results : All</b></span>";
+                $(e).each(function (e, a) {
+                    (i += "<div class='panel-group' id='accordion'>"),
+                        (i += "<div class='panel panel-default'>"),
+                        (i += "<a class='collapsed' data-parent='#accordion'>"),
+                        (i += "<div class='panel-heading'>"),
+                        (i +=
+                            "<h4 class='panel-title'><span class='marg' style='font-size: 16px; color: #000;margin-top: 0; margin-bottom: 0;'> <b>" +
+                            a.catName +
+                            "</b>: " +
+                            a.catDesc +
+                            " </span><i id='sign1' class='fa gray-plus' aria-hidden='true'></i></h4>"),
+                        (i += "</div>"),
+                        (i += "</a>"),
+                        (i += "<div id='collap1'>"),
+                        (i += "<div class='panel-body'>"),
+                        (i += "<ul>"),
+                        (i += "<li><b>List Type :</b> " + a.listType + " </li>"),
+                        (i += "</ul>"),
+                        (i += "<ul>"),
+                        (i += "<li><b>Country &nbsp;:</b> " + a.country + "</li>"),
+                        (i += "</ul>"),
+                        (i += "</div>"),
+                        (i += "</div>"),
+                        (i += "</div>"),
+                        (i += "</div>");
+                }),
+                    $("#listSearchOut").html(i),
+                    "" == e && ($("#listSearchOut").html("No Records for the Search<br/> <b>please try different search</b>"), (a = "")),
+                    $("#myModal #result").show(),
+                    $("#myModal #result").html(a);
+            },
+            error: function () {
+                alert("Somthing Wrong! please try again later.");
+            },
+        });
+}
+function isEmail(e) {
+    return /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(e);
+}
+$(document).ready(function () {
+    function t(e) {
+        var a = $("#username").val(),
+            t = $("#password").val(),
+            t = Base64.encode(t),
+            r = e.status;
+        $("#loginSubmit").val("Login"),
+            $("#loginSubmit").removeAttr("disabled"),
+            $("#loginSubmit").html(""),
+            "Success" != r || "1" != e.show_catlist || ("1" != e.dialogbox_status && "0" != e.dialogbox_status)
+                ? "Success" == r && "1" == e.dialogbox_status && "0" == e.show_catlist
+                    ? (i(),
+                      $(
+                          "<form action=" +
+                              oldLoginformActionUrl +
+                              'Servlet id="myForm" method="POST"><input type="hidden" name="Action" value="listSearch"/><input type="hidden" name="UserProf_Email" value="' +
+                              a +
+                              '"/><input type="hidden" name="UserProf_Pwd"  \tvalue="' +
+                              t +
+                              '"/><input type="hidden" name="addcat_lst" value="no"/><input type="hidden" name="rememberDialog" value="true"/></form>'
+                      )
+                          .appendTo($(document.body))
+                          .submit())
+                    : ("Success" == r && ("0" == e.dialogbox_status || "" == e.dialogbox_status || "" == e.show_catlist)) || ("0" != e.userSignupType && -1 != r.indexOf("Your account has expired"))
+                    ? ($("#resultLoading").css("display", "none"), $("#login").modal("hide"), $("#pepmsg").html(e.pepMessage), $("#dailogMessage").modal("show"))
+                    : ($("#resultLoading").css("display", "none"), $("#errorMsg").html(e.status))
+                : (i(),
+                  $(
+                      "<form action=" +
+                          oldLoginformActionUrl +
+                          'Servlet id="myForm" method="POST"><input type="hidden" name="Action" value="listSearch"/><input type="hidden" name="UserProf_Email" value="' +
+                          a +
+                          '"/><input type="hidden" name="UserProf_Pwd"  \tvalue="' +
+                          t +
+                          '"/><input type="hidden" name="addcat_lst" value="yes"/><input type="hidden" name="rememberDialog" value="true"/></form>'
+                  )
+                      .appendTo($(document.body))
+                      .submit());
+    }
+    function i() {
+        var e, a;
+        $("#remember_me").is(":checked")
+            ? ((e = $("#username").val()), (a = Base64.encode($("#password").val())), $.cookie("email", e, { expires: 14 }), $.cookie("pstoken", a, { expires: 14, secure: !0 }), $.cookie("remember", !0, { expires: 14 }))
+            : ($.cookie("email", null), $.cookie("pstoken", null), $.cookie("remember", null));
+    }
+    function a(e) {
+        $("#passworReset").val("Submit"),
+            $("#passworReset").removeAttr("disabled"),
+            $("#passworReset").html(""),
+            "error" == e.status ? ($("#resultLoading").css("display", "none"), $("#forgoterr").html("Server error")) : (e.PwdReset_ErrorId, $("#resultLoading").css("display", "none"), $("#forgoterr").html(e.PwdReset_ErrorDesc));
+    }
+    function r(e) {
+        $("#successDialogMsg").html("");
+        var a = e.UserErrorDesc;
+        "" != jQuery.trim(a) &&
+            ((e = a.split("#")),
+            $("#resultLoading").css("display", "none"),
+            "-1" == e[1]
+                ? ($("#signupPriceForm").find("input[type=text],input[type=checkbox],input[type=radio],input[type=password],input[type=number],textarea, select").val(""),
+                  $("#signup-err").html(e[0]),
+                  grecaptcha.reset(),
+                  $("#hidden-grecaptcha").val(""),
+                  (a = $("[name=UserProf_Pwd]").val()),
+                  $("[name=UserProf_Pwd]").val(Base64.decode(a)))
+                : ($("#resultLoading").css("display", "none"),
+                  "2" == e[1]
+                      ? ($("#signupPriceForm").find("input[type=text],input[type=checkbox],input[type=radio],input[type=password],input[type=number],textarea, select").val(""),
+                        $("#signupSubmit").attr("data-target", "#alertSignup"),
+                        $("#sign-up").modal("hide"),
+                        $("#alertDialogMsg").html(e[0]),
+                        $("#alertSignup").modal("show"),
+                        $("#alertSignup").focus())
+                      : ($("#signupPriceForm").find("input[type=text],input[type=checkbox],input[type=radio],input[type=password],input[type=number],textarea, select").val(""),
+                        $("#signupSubmit").attr("data-target", "#successSignup"),
+                        $("#sign-up").modal("hide"),
+                        $("#successDialogMsg").html(e[0]),
+                        $("#successSignup").modal("show"),
+                        $("#successSignup").focus())));
+    }
+    function n(e) {
+        $("#resultLoading").css("display", "none"),
+            250 == e.response ? ($("#successDiv").css("display", "block"), $("#contactMessage").css("display", "none"), $("#contactSucessMessage").html(e.status), $(window).scrollTop(0)) : $("#contactSucessMessage").html(e.status),
+            $("#successDiv").focus();
+    }
+    $("#dialog_contact input, #dialog_contact textarea").on("keypress", function (e) {
+        if (32 !== e.which || this.value.length) {
+            $(this).removeClass("error_input");
+            var a = new RegExp("^[a-zA-Z0-9@. ]+$"),
+                t = String.fromCharCode(event.charCode || event.which);
+            if (!a.test(t)) return event.preventDefault(), !1;
+        } else e.preventDefault();
+    }),
+        $("#active_campaignform input, #active_campaignform textarea").on("keypress", function (e) {
+            if ((32 !== e.which || this.value.length)) {
+                $(this).removeClass("error_input");
+                var a = new RegExp("^[a-zA-Z0-9@. _-]+$"),
+                    t = String.fromCharCode(event.charCode || event.which);
+                if (!a.test(t)) return event.preventDefault(), !1;
+            } else e.preventDefault();
+        }),
+        jQuery("#active_campaignform").validate({
+            ignore: ".ignore",
+            rules: {
+                name: { required: true},
+                email: { required: true,email: true, 
+                    validateemail: {
+                        depends:function (element) {
+                            if(jQuery(".dispemail").val() == "1") {
+                                return true;
+                            }else{
+                                return false;
+                            }
+                        },
+                    }    
+                },
+                company: { required: true},
+                message: { required: true},
+                ansmathcaptcha: { required: true}
+            },
+            messages: {
+                ansmathcaptcha: { required: captchaErrorMsg}
+            },
+            submitHandler: function (e) {
+                var id = 'active_campaignform';
+                var email= $('#'+id+' #contactEmail').val();
+                var url = siteUrl;
+                var data = {email:email,checkemail:true};
+                jQuery('.loading_content').removeClass('hide');
+                jQuery.ajax({
+                    type: "post",
+                    url: url,
+                    data: data,
+                    success:function(resp, textStatus, jqXHR){
+                      jQuery('.loading_content').addClass('hide');  
+                      if(resp == 'valid'){
+                        if(checkInput(id) == true){
+                            name            =   $('#'+id+' #fullname').val();
+                            var name        =   name.split(" ");
+                            var lastname    =   (name[1] != undefined) ? name[1] : '';
+                            $('.loading_content').removeClass('hide');
+                            data = {'type' : 1, 'email' : $('#'+id+' #contactEmail').val()}
+                            var mail_check = 0;
+                            if(!isEmail($('#'+id+' #contactEmail').val())){   
+                                $('#'+id+' #contactEmail').addClass('error_input');
+                                return false;
+                            }
+                            $('#'+id+' input').each(function(){
+                                if($(this).val().trim() == '')
+                                {
+                                    $(this).addClass('error_input');
+                                    return false;
+                                }
+                            });
+                            var notes = $('#'+id+' #contactMsg').val();
+                            data = 'FirstName='+name[0]+ '&email='+$('#'+id+' #contactEmail').val()+ '&LastName='+lastname+'&phone=Not Provided&org='+$('#'+id+' #contactWebsite').val()+'&tags='+ $('#'+id+' .tag').val()+', '+ $('input[name="page_tag"]').val()+'&note='+notes;
+                           
+                            SaveCampaignContact(data);
+                            $("#resultLoading").css("display", "none");        
+                            if(INLINE_CONTACT_FORM == 1) // if configured to send mail to kyc sale team
+                            {   
+                                var Subject_Title = $('input[name="subject_hidden"]').val();
+
+                                if(Subject_Title == undefined)
+                                {
+                                    tagvl = $('.tag').val()
+                                    Subject_Title = TagTitle[tagvl];    
+                                }
+                                if(Subject_Title == undefined){
+                                    Subject_Title =  $("#"+id+" #contactMsg").val()
+                                }
+                                var a, t = $("#contactEmail").val();
+                                -1 != t.indexOf("'") ? ($("#mailError").html("Please enter a valid email address."), !1) : isEmailAddressValid(t) ? (a = "Action=contactUsMail&name=" + $('#'+id+' #fullname').val() + "&email=" + $('#'+id+' #contactEmail').val() + "&companyWebsite=" + $("#"+id+" #contactWebsite").val() + "&phone=Not Provided&subject="+Subject_Title+"&message=" + $("#"+id+" #contactMsg").val() + "&sid=" + Math.random(), ajaxCall(formActionUrl + "AuthUser?jsonp=callback", a, "GET", "callback", i, "errorfunction"), $("#successDiv").css("display", "none"), void $("#resultLoading").css("display", "none")) : ($("#mailError").html("Please enter a valid email address."), !1)    
+                            }
+
+                            $('#contactSucessMessage').hide();
+                            $('#active_campaignform').hide();
+                            $('.loading_content').addClass('hide');
+                            $("#resultLoading").css("display", "none");
+                            $('#successDiv').show();
+                            $("#active_campaignform")[0].reset(),createSum(id);
+                            return false;
+                        }
+                      }else{
+                        jQuery('#'+id+' #contactEmail').focus();
+                        jQuery('<label id="contactEmail-error" class="error" for="contactEmail">'+invalidEmailError+'</label>').insertAfter(jQuery("#" + id + " #contactEmail"));
+                      }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                      alert(errorThrown);
+                    }
+                });
+                return false;                    
+            },    
+        }),
+        add_chatinline(),
+        $("#smartListForm").submit(function (e) {
+            e.preventDefault(), submitSmartListForm();
+        }),
+        $("#loginForm").submit(function (e) {
+            e.preventDefault(),
+                (function () {
+                    $("#errorMsg").html("");
+                    var e = $("#username").val(),
+                        a = $("#password").val();
+                    "" == e
+                        ? ($("#username").focus(), $("#username").val("This field can't be empty."))
+                        : "" == a
+                        ? $("#password").val("This field can't be empty.")
+                        : ($("#resultLoading").css("display", "block"),
+                          ajaxCall(oldLoginformActionUrl + "AuthUser?jsonp=callback", "Action=userAuthenticate&UserProf_Pwd=" + (a = Base64.encode(a)) + "&UserProf_Email=" + e + "&sid=" + Math.random(), "GET", "callback", t, "errorfunction"));
+                })();
+        }),
+        $("#forgotForm").submit(function (e) {
+            e.preventDefault(),
+                (e = $("#forgotEmail").val()),
+                ajaxCall(formActionUrl + "AuthUser?jsonp=callback", "Action=resetPassword&UserProf_Email=" + e + "&sid=" + Math.random(), "GET", "callback", a, "errorfunction"),
+                $("#resultLoading").css("display", "block");
+        }),
+        jQuery("#consultingFrom").validate({
+            ignore: ".ignore",
+            rules: {
+                name: { required: true},
+                email: { required: true,email: true, 
+                    validateemail: {
+                        depends:function (element) {
+                            if(jQuery(".dispemail").val() == "1") {
+                                return true;
+                            }else{
+                                return false;
+                            }
+                        },
+                    }    
+                },
+                phone: { required: true},
+                company: { required: true},
+                ansmathcaptcha: { required: true}
+            },
+            messages: {
+                ansmathcaptcha: { required: captchaErrorMsg}
+            },
+            submitHandler: function (e) {
+                var id = 'consultingFrom';
+                var email= $('#'+id+' #consultingEmail').val();
+                var url = siteUrl;
+                var data = {email:email,checkemail:true};
+                jQuery("#resultLoading").css("display", "block");
+                jQuery.ajax({
+                    type: "post",
+                    url: url,
+                    data: data,
+                    success:function(resp, textStatus, jqXHR){
+                        jQuery("#resultLoading").css("display", "none");
+                        if(resp == 'valid'){
+                            if(checkInput(id) == true){
+                                submitBookMeeting();    
+                                return false;
+                            }
+                        }else{
+                            jQuery('#' + id + ' #consultingEmail').focus();
+                            jQuery('<label id="consultingEmail-error" class="error" for="consultingEmail">'+invalidEmailError+'</label>').insertAfter(jQuery('#' + id + ' #consultingEmail'));
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                      alert(errorThrown);
+                    }
+                });
+                return false;   
+            },
+        }),        
+        $("#signupForm").submit(function (e) {
+            return (
+                e.preventDefault(),
+                "" == $("#hidden-grecaptcha-error").val()
+                    ? ($("#captchaError").html(captchaErrorMsg), $("#captchaError").show(), $("#captchaError").delay(3e3).fadeOut(), $("#captchaError").focus(), !1)
+                    : !!submitSignUpForm() &&
+                      ((function () {
+                          var e = $("[name=UserProf_Pwd]").val();
+                          $("[name=UserProf_Pwd]").val(Base64.encode(e));
+                          e = $("#signupForm").serialize();
+                          ajaxCall(formActionUrl + "Servlet?jsonp=callback", e, "GET", "callback", r, "errorfunction");
+                      })(),
+                      void $("#resultLoading").css("display", "block"))
+            );
+        }),
+        jQuery("#signupPriceForm").validate({
+            ignore: ".ignore",
+            rules: {
+                UserProf_Email: { required: true,email: true, 
+                    validateemail: {
+                        depends:function (element) {
+                            if(jQuery(".signup_dispemail").val() == "1") {
+                                return true;
+                            }else{
+                                return false;
+                            }
+                        },
+                    }   
+                },
+                UserProf_Pwd: { required: !0, minlength: 8, maxlength: 16,passwordFormatCheck: true },
+                verPassword: { required: !0, minlength: 8, maxlength: 16, equalTo: "#regpwd" },
+            },
+            messages: {
+                verPassword: { equalTo: "Password does not match" },
+            },
+            submitHandler: function (e) {
+                return "" == $("#hidden-grecaptcha").val()
+                    ? ($("#captchaError").html(captchaErrorMsg), $("#captchaError").show(), $("#captchaError").delay(3e3).fadeOut(), $("#captchaError").focus(), !1)
+                    : !!submitSignUpForm() &&
+                          ((function () {
+                              var e = "free",
+                                  a = "FREE PREMIUM TRIAL";
+                              $("#UserProf_paidamount").val("0"),
+                                  $("#isDecesionIQ").val("false"),
+                                  $("#UserProf_plan").val("Free"),
+                                  $("#UserProf_SubId").val("1"),
+                                  $("#UserProf_period").val("30"),
+                                  $("#UserProf_Type").val("2"),
+                                  $("#packageName").val(e),
+                                  $("#packageDesc").val(a);
+                              $("#hidden-grecaptcha").val(), $("#regEmail").val();
+                              a = $("[name=UserProf_Pwd]").val();
+                              $("[name=UserProf_Pwd]").val(Base64.encode(a));
+                              $("#signupPriceForm").serialize();
+                              freeSignup();
+                          })(),
+                          void $("#resultLoading").css("display", "block"));
+            },
+        }),
+        jQuery("#dialog_contact").validate({
+            ignore: ".ignore",
+            rules: {
+                name: { required: true},
+                email: { required: true,email: true, 
+                    validateemail: {
+                        depends:function (element) {
+                            if(jQuery(".dispemail").val() == "1") {
+                                return true;
+                            }else{
+                                return false;
+                            }
+                        },
+                    }    
+                },
+                company: { required: true},
+                message: { required: true},
+                ansmathcaptcha: { required: true}
+            },
+            messages: {
+                ansmathcaptcha: { required: captchaErrorMsg}
+            },
+            submitHandler: function (e) {
+                var id = "dialog_contact";
+                var email = $("#" + id + " #contact_Email").val();
+                var url = siteUrl;
+                var data = {email:email,checkemail:true};
+                jQuery("#resultLoading").css("display", "block");
+                jQuery.ajax({
+                    type: "post",
+                    url: url,
+                    data: data,
+                    success:function(resp, textStatus, jqXHR){
+                      jQuery("#resultLoading").css("display", "none");  
+                      if(resp == 'valid'){
+                        if(checkInput(id) == true){
+                            jQuery("#resultLoading").css("display", "block");
+                            var name = $("#" + id + " #full_name").val();
+                            var fname = $("#" + id + " #full_name").val().split(" ");
+                            var lname = fname[1] ? fname[1] : "";
+                            var fulname = fname[0] ? fname[0] : name;
+                            var tag_page = $('input[name="page_tag"]').val();
+                            var email = $("#" + id + " #contact_Email").val();
+                            var phone = $("#" + id + " #contact_Phone").val();
+                            var tags = $("#" + id + "  #contact_Sub option:selected").attr("data-tag") + "," +tag_page;
+                            var org = $("#" + id + " #contact_Website").val();
+                            var notes = $("#" + id + " #contact_Msg").val();
+
+                            var data  = {
+                                'FirstName' :   fulname,
+                                'email'     :   email,
+                                'LastName'  :   lname,
+                                'phone'     :   phone,
+                                'org'       :   org,
+                                'tags'      :   tags,
+                                'note'      :   notes
+                            };
+
+                            SaveCampaignContact(data);
+                            $("#resultLoading").css("display", "none");
+                            var dta = "Action=contactUsMail&name=" +
+                              $("#" + id + " #full_name").val() +
+                              "&email=" +
+                              $("#" + id + " #contact_Email").val() +
+                              "&companyWebsite=" +
+                              $("#" + id + " #contact_Website").val() +
+                              "&phone=" +
+                              $("#" + id + " #contact_Phone").val() +
+                              "&subject=" +
+                              $("#" + id + " #contact_Sub option:selected").text() +
+                              "&message=" +
+                              $("#" + id + " #contact_Msg").val() +
+                              "&sid=" +
+                              Math.random();
+                            ajaxCall(formActionUrl + "AuthUser?jsonp=callback", dta, "GET", "callback", n, "errorfunction");
+                            $("#successDiv").css("display", "none");
+                            $("#resultLoading").css("display", "block");
+                            return false;
+                        }
+                      }else{
+                        jQuery("#" + id + " #contact_Email").focus();
+                        jQuery('<label id="contact_Email-error" class="error" for="contact_Email">'+invalidEmailError+'</label>').insertAfter(jQuery("#" + id + " #contact_Email"));
+                      }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                      alert(errorThrown);
+                    }
+                });
+                return false;     
+            },
+        }),
+        $("#login").on("shown.bs.modal", function () {
+            var e, a;
+            "true" == $.cookie("remember") && ((e = $.cookie("email")), (a = Base64.decode($.cookie("pstoken"))), $("#username").val(e), $("#password").val(a), $("#remember_me").attr("checked", "checked"));
+        }),
+        $("#sign-up").on("shown.bs.modal", function () {
+            grecaptcha.reset(), $("#hidden-grecaptcha").val("");
+        }),
+        $("#login").mouseup(function () {
+            $("#errorMsg").html("");
+        }),
+        $("#forgot-modal").mouseup(function () {
+            $("#forgoterr").html("");
+        }),
+        $(".ft-newsletter").mouseup(function () {
+            $("#mailMsg").html("");
+        }),
+        $("#signupPriceForm").mouseup(function () {
+            $("#emailError").html(""), $("#passError").html(""), $("#signup-err").html(""), $("#captchaError").html("");
+        }),
+        $("#dialog_contact").mouseup(function () {
+            $("#mailError").html("");
+        }),
+        $("#consultingFrom").mouseup(function () {
+            $("#meetingMsg").html("");
+        }),
+        $("#login").on("show.bs.modal", function () {
+            $("#username").val(""), $("#password").val(""), $("#errorMsg").html("");
+        }),
+        $("#forgot-modal").on("show.bs.modal", function () {
+            $("#forgotEmail").val(""), $("#forgoterr").html("");
+        });
+        $('#SendTagActiveCampaign').on('hidden.bs.modal', function () {
+            $("#resultLoading").css("display", "hide");
+            var id = 'active_campaignform';
+            createSum(id);
+        });
+});
+var setupAutoComplete = function () {
+    var t = $("#smartListType").text(),
+        r = $("#smartText").val(),
+        i = formActionUrl + "rest/kyc/searchlist";
+    $("#smartText").autocomplete({
+        source: function (e, a) {
+            $.ajax({
+                url: i,
+                type: "POST",
+                data: JSON.stringify({ listType: jQuery.trim(t), smartListSearch: r }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (e) {
+                    a(
+                        $.map(e.slice(0, 5), function (e, a) {
+                            return { label: e.catDesc, value: e.catDesc };
+                        })
+                    );
+                },
+                error: function () {},
+            });
+        },
+        minLength: 5,
+    });
+};
+function removeErrorMsg() {
+    $("#smartSearchMsg").html("");
+}
+function closeallDialog() {
+    $(".modal").modal("hide");
+}
+function toggleList(e) {
+    $("#sign" + e).toggleClass("fa fa-plus gray-plus fa fa-minus gray-plus");
+}
+function setLocalSession(e, a, t) {
+    try {
+        "undefined" != typeof Storage && sessionStorage.setItem(e, a);
+    } catch (e) {}
+    window.location.href = t;
+}
+function displayMailMsg() {
+    var e = $("#email").val();
+    return $("#mailMsg").show(), -1 == e.indexOf("'") && isEmailAddressValid(e) ? void $("#mailMsg").html("We have sent an email. Please click on verify link to subscribe.") : ($("#mailMsg").html("Please enter a valid email address."), !1);
+}
+function subScriptionPlan() {
+    "free" == $("#SignupType").val()
+        ? ($("#UserProf_address").removeAttr("required"),
+          $("#UserProf_address").attr("type", "hidden"),
+          $("#UserProf_City").removeAttr("required"),
+          $("#UserProf_City").attr("type", "hidden"),
+          $("#UserProf_State").removeAttr("required"),
+          $("#UserProf_State").attr("type", "hidden"))
+        : ($("#UserProf_address").attr("required", "true"),
+          $("#UserProf_address").attr("type", "text"),
+          $("#UserProf_City").attr("required", "true"),
+          $("#UserProf_City").attr("type", "text"),
+          $("#UserProf_State").attr("required", "true"),
+          $("#UserProf_State").attr("type", "text"));
+}
+function submitBookMeeting() {
+    var frmid = 'consultingFrom';
+    $("#resultLoading").css("display", "block");
+    var e = (e = $('#' + frmid + ' input[name="name"]').val()).split(" ");
+    (data =
+        "FirstName=" +
+        e[0] +
+        "&email=" +
+        $('#' + frmid + ' input[name="email"]').val() +
+        "&LastName=" +
+        e[1] +
+        "&phone=" +
+        $('#' + frmid + ' input[name="phone"]').val() +
+        "&org=" +
+        $('#' + frmid + ' input[name="company"]').val() +
+        "&tags=" +
+        BOOK_A_MEETING),
+        SaveCampaignContact(data),
+        $("#resultLoading").css("display", "none");
+    e =
+        "Action=contactUsMail&name=" +
+        $('#' + frmid + ' input[name="name"]').val() +
+        "&email=" +
+        $('#' + frmid + ' input[name="email"]').val() +
+        "&companyWebsite=" +
+        $('#' + frmid + ' input[name="company"]').val() +
+        "&phone=" +
+        $('#' + frmid + ' input[name="phone"]').val() +
+        "&subject=Just about everything.  Let's Book a Meeting&message=Let’s Book a Meeting&sid=" +
+        Math.random();
+    ajaxCall(formActionUrl + "AuthUser?jsonp=callback", e, "GET", "callback", callbackMeeting, "errorfunction"),$("#consultingFrom")[0].reset(),createSum(frmid);
+}
+function callbackMeeting(e) {
+    $("#resultLoading").css("display", "none"),
+        $("html, body").animate({ scrollTop: $("#meetingMsg").offset().top }, 1e3),
+        250 == e.response
+            ? ($("#successDiv").css("display", "block"), $("html, body").animate({ scrollTop: $("#meetingMsg").offset().top }, 1e3), $("#meetingMsg").html("Thank you for your interest. We will get back to you shortly!"))
+            : ($("#meetingMsg").html(e.status), $("html, body").animate({ scrollTop: $("#meetingMsg").offset().top }, 1e3));
+}
+function add_chatinline() {}
+function openTagSubmitBox(e, a, t) {
+    $("#active_campaignform input, #active_campaignform textarea").val(""),
+        $("#successDiv").hide(),
+        $("#active_campaignform").show(),
+        "" != e && $("#SendTagActiveCampaign .tag").val(e),
+        "" != a.trim() ? $("#SendTagActiveCampaign .title_tag").html("(" + a + ")") : $("#SendTagActiveCampaign .title_tag").html(""),$("#SendTagActiveCampaign #contactMsg").val(t);
+        $("#SendTagActiveCampaign").modal("show");
+        var id = 'active_campaignform';
+        createSum(id);
+}
+function SaveCampaignContact(e) {
+    return $.ajax({ url: ActiveCampaignurl, type: "POST", data: e });
+}
+function SaveCampaignContactRegister(e) {
+    return (
+        $("#resultLoading").css("display", "block"),
+        (hometag = $('input[name="page_tag"]').val()),
+        (tags = $("#SignupType option:selected").attr("data-tag") + ", " + hometag),
+        (term_policy = T_A_ACCEPTED),
+        (tags = tags + "," + term_policy),
+        $('input[name="newsletter"]').is(":checked") && (tags = tags + "," + SUBSCRIPTION_ACCEPTED),
+        (data =
+            "FirstName=" +
+            $("#" + e + ' input[name="UserProf_FName"]').val() +
+            "&email=" +
+            $("#" + e + ' input[name="UserProf_Email"]').val() +
+            "&LastName=" +
+            $("#" + e + ' input[name="UserProf_LName"]').val() +
+            "&phone=" +
+            $("#" + e + ' input[name="UserProf_WrkPhn"]').val() +
+            "&org=" +
+            $("#" + e + ' input[name="UserProf_Company"]').val() +
+            "&tags=" +
+            tags),
+        $.ajax({ url: ActiveCampaignurl, type: "POST", data: data })
+    );
+}
+var getUrlParameter = function (e) {
+    for (var a, t = window.location.search.substring(1).split("&"), r = 0; r < t.length; r++) if ((a = t[r].split("="))[0] === e) return void 0 === a[1] || decodeURIComponent(a[1]);
+};
+function resendActLink() {
+    var e = $("#regEmail").val();
+    $("#alertSignup").modal("hide"),
+        $("#alertSignup").hide(),
+        $.ajax({
+            type: "POST",
+            url: formActionUrl + "Servlet",
+            data: "WorkerBean=actionWorker&Action=resendActLink&UserProf_Email=" + e + "&sid=" + Math.random(),
+            success: function (e) {
+                $("#signupPriceForm").find("input[type=text],input[type=checkbox],input[type=email],input[type=radio],input[type=password],input[type=number],textarea, select").val("");
+            },
+            error: function (e) {},
+        });
+}
+function changeSearchType() {
+    "Fuzzy" == $("#searchTypebox").val() ? ($("#mustMatchLable").hide(), $("#mustMatch").prop("checked", !1)) : $("#mustMatchLable").show();
+}
+function freeSignup() {
+    var e = $("[name=UserProf_Email]").val(),
+        a = $("[name=UserProf_FName]").val(),
+        t = $("[name=UserProf_LName]").val(),
+        r = $("[name=UserProf_Pwd]").val(),
+        i = $("[name=verPassword]").val(),
+        n = $("[name=UserProf_Company]").val(),
+        s = $("[name=UserProf_City]").val(),
+        o = $("[name=UserProf_State]").val(),
+        l = $("[name=UserProf_Country]").val(),
+        c = $("[name=UserProf_WrkPhn]").val(),
+        p = $("[name=UserProf_HmPhn]").val(),
+        d = $("[name=UserProf_address]").val(),
+        u = $("[name=UserProf_CellPhn]").val(),
+        m = $("[name=UserProf_Zip]").val(),
+        h = $("[name=UserProf_Type]").val(),
+        g = $("#UserProf_period").val(),
+        v = $("#UserProf_paidamount").val(),
+        f = $("#UserProf_SubId").val(),
+        y = $("#newsletter").val(),
+        P = $("#timezone").val(),
+        _ = $("#UserProf_plan").val(),
+        b = $("#isDecesionIQ").val(),
+        U = $("#selectPlan").val(),
+        S = $("#packageName").val(),
+        w = $("#packageDesc").val();
+    $(
+        "<form action=" +
+            formActionUrl +
+            'Servlet id="myForm" method="POST"><input type="hidden" name="Action" value="freeRegister"/><input type="hidden" name="WorkerBean" value="actionSSOWorker"/><input type="hidden" name="UserProf_Email" value="' +
+            e +
+            '"/><input type="hidden" name="UserProf_FName"  \tvalue="' +
+            a +
+            '"/><input type="hidden" name="UserProf_LName"  \tvalue="' +
+            t +
+            '"/><input type="hidden" name="UserProf_Pwd"  \tvalue="' +
+            r +
+            '"/><input type="hidden" name="verPassword"  \tvalue="' +
+            i +
+            '"/><input type="hidden" name="UserProf_Company"  \tvalue="' +
+            n +
+            '"/><input type="hidden" name="UserProf_City"  \tvalue="' +
+            s +
+            '"/><input type="hidden" name="UserProf_State"  \tvalue="' +
+            o +
+            '"/><input type="hidden" name="UserProf_Country"  \tvalue="' +
+            l +
+            '"/><input type="hidden" name="UserProf_WrkPhn"  \tvalue="' +
+            c +
+            '"/><input type="hidden" name="UserProf_HmPhn"  \tvalue="' +
+            p +
+            '"/><input type="hidden" name="UserProf_address"  \tvalue="' +
+            d +
+            '"/><input type="hidden" name="UserProf_CellPhn"  \tvalue="' +
+            u +
+            '"/><input type="hidden" name="UserProf_Zip"  \tvalue="' +
+            m +
+            '"/><input type="hidden" name="UserProf_Type"  \tvalue="' +
+            h +
+            '"/><input type="hidden" name="UserProf_period"  \tvalue="' +
+            g +
+            '"/><input type="hidden" name="UserProf_paidamount"  \tvalue="' +
+            v +
+            '"/><input type="hidden" name="UserProf_SubId"  \tvalue="' +
+            f +
+            '"/><input type="hidden" name="newsletter"  \tvalue="' +
+            y +
+            '"/><input type="hidden" name="UserProfile_Tmzn"  \tvalue="' +
+            P +
+            '"/><input type="hidden" name="UserProf_plan"  \tvalue="' +
+            _ +
+            '"/><input type="hidden" name="isDecesionIQ"  \tvalue="' +
+            b +
+            '"/><input type="hidden" name="packageName"  \tvalue="' +
+            S +
+            '"/><input type="hidden" name="packageDesc"  \tvalue="' +
+            w +
+            '"/><input type="hidden" name="selectPlan"  \tvalue="' +
+            U +
+            '"/></form>'
+    )
+        .appendTo($(document.body))
+        .submit();
+}
+
+function getInTouchFunction(){
+    jQuery("#active_campaignform").valid();
+}
+
+!(function (e, a, t, r) {
+    (e.visitorGlobalObjectAlias = "vgo"),
+        (e[e.visitorGlobalObjectAlias] =
+            e[e.visitorGlobalObjectAlias] ||
+            function () {
+                (e[e.visitorGlobalObjectAlias].q = e[e.visitorGlobalObjectAlias].q || []).push(arguments);
+            }),
+        (e[e.visitorGlobalObjectAlias].l = new Date().getTime()),
+        ((t = a.createElement("script")).src = "https://diffuser-cdn.app-us1.com/diffuser/diffuser.js"),
+        (t.async = !0),
+        (r = a.getElementsByTagName("script")[0]).parentNode.insertBefore(t, r);
+})(window, document),
+    vgo("setAccount", "66600862"),
+    vgo("setTrackByDefault", !0),
+    vgo("process");
+
+//Math captcha
+var total;
+function getRandom(){
+    return Math.ceil(Math.random()* 20);
+}
+function createSum(frm = null){
+    var randomNum1 = getRandom(),randomNum2 = getRandom();
+    total = randomNum1 + randomNum2;
+    if(frm){
+        jQuery("#"+frm).find(".questionMathCaptcha" ).html("<small>" +randomNum1 + " + " + randomNum2 + "</small><b>=</b>");  
+    }else{
+        jQuery(".questionMathCaptcha" ).html("<small>" +randomNum1 + " + " + randomNum2 + "</small><b>=</b>");  
+    }    
+    jQuery(".ansMathCaptcha").val('');
+    return checkInput(frm = null);
+}
+function checkInput(frm = null){
+    if(frm){
+        var input = jQuery("#"+frm).find(".ansMathCaptcha").val(),slideSpeed = 200,hasInput = !!input,valid = hasInput && input == total;    
+    }else{
+        var input = jQuery(".ansMathCaptcha").val(),slideSpeed = 200,hasInput = !!input,valid = hasInput && input == total;    
+    }
+    
+    if(input != ''){
+        jQuery("#"+frm).find('.successMathCaptcha').html(validMathCaptchaMsg);
+        jQuery("#"+frm).find('.successMathCaptcha').toggle(valid);
+        jQuery("#"+frm).find('.failMathCaptcha').html(invalidMathCaptchaMsg);
+        jQuery("#"+frm).find('.failMathCaptcha').toggle(hasInput && !valid);
+    }else{
+        jQuery('.successMathCaptcha').toggle(valid)
+        jQuery('.failMathCaptcha').toggle(valid)
+    }
+    if(valid = hasInput && input == total){
+      return true;
+    }else{
+        if(frm){   
+            jQuery("#"+frm).find(".ansMathCaptcha").focus();
+        }      
+      return false;
+    }
+}
+jQuery(document).ready(function(){
+  //create initial sum
+  createSum();
+  //create initial sum
+  jQuery(".ansMathCaptcha").keyup(function(){
+    var frmid = jQuery(this).attr("data-id");
+    checkInput(frmid);
+  });
+  jQuery(".resetMathCaptcha").click(function(){
+    var frmid = jQuery(this).attr("data-id");
+    createSum(frmid);
+  });
+  jQuery(".isNumber").keypress(function (e) {
+    //if the letter is not digit then display error and don't type anything
+     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+        //display error message
+        //jQuery("#errmsg").html("Digits Only").show().fadeOut("slow");
+        return false;
+    }
+  });
+
+});
+//Math captcha
+
+jQuery(document).ready(function(){
+    // open a menu when i click on li
+    jQuery('.has-sub').on('click', function(){
+      if(jQuery(this).hasClass("active")) {
+           // if it's open then just close it
+           jQuery(this).removeClass("active");
+        } else {
+           // if it's closed, then close everything else and open it
+           jQuery('.has-sub').removeClass("active");
+           jQuery(this).addClass("active");
+        }
+    });   
+
+    jQuery(document).on('click', function (event) {
+        if (!jQuery(event.target).closest('.header-section_a').length) {
+          // ... clicked on the 'body', but not inside of #menutop
+           jQuery('.has-sub').removeClass("active");
+        }
+    });
+    if(jQuery(this).hasClass("active")) {
+       jQuery(this).removeClass("active");
+    } 
+    else {
+       jQuery('.has-sub').removeClass("active");
+       jQuery(this).addClass("active");
+    }
+});
+
+jQuery(window).scroll(function() {    
+  var scroll = jQuery(window).scrollTop();
+   //>=, not <=
+    if (scroll >= 50) {
+        if(jQuery('.has-sub').hasClass("active")) {
+           // if it's open then just close it
+           jQuery('.has-sub').removeClass("active");
+        } else {
+           jQuery('.has-sub').removeClass("active");
+        }
+    }
+});
+
+// scroll down add class in menu
+
+$(window).scroll(function() {
+    var nav = $('.div_postion');
+    var top = 10;
+    if ($(window).scrollTop() >= top) {
+
+        nav.addClass('menu_fixed');
+        $('.position_stay_kis').addClass('d-none');
+
+    } else {
+        nav.removeClass('menu_fixed');
+        $('.position_stay_kis').removeClass('d-none');
+
+    }
+});
+
+
