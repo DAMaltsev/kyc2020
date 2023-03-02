@@ -57,6 +57,40 @@
     margin-top: 50px;
 }
 
+.mt-md-100 {
+    margin-top: 100px;
+}
+
+.img_line img {
+    margin-right: 10px;
+}
+
+
+.within .p_larger {
+    max-width: 700px;
+    margin: 50px auto 30px !important;
+}
+
+.mb-50 {
+    margin-bottom: 50px;
+}
+
+.mx-350 {
+    max-width: 350px;
+}
+
+.within .p_xl {
+    margin: 75px auto 50px;
+}
+
+.img_line span {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 62px;
+    line-height: 75px;
+    color: #EB6F2A;
+}
+
 .nums {
     font-family: Inter, sans-serif;
     font-style: normal;
@@ -173,6 +207,14 @@ hr {
     border-radius: 3px !important;
 }
 
+.p_reg {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 32px;
+    color: #171141;
+}
+
 .customers .para {
     max-width: 660px;
     margin: auto;
@@ -208,6 +250,12 @@ hr {
 
 .container__sm {
     max-width: 1000px;
+}
+
+.container__md {
+    max-width: 1150px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .case .try-1 {
@@ -343,10 +391,261 @@ hr {
     justify-content: space-between;
 }
 
+.top-banner {
+    background: url('img/top_bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.banner_content {
+    background: rgba(252, 133, 27, 0.8);
+    padding: 49px 25px;
+    max-width: 300px;
+}
+
+.banner_content p {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 29px;
+    color: #FFFFFF;
+}
+
+.banner_content p span {
+    font-weight: 600;
+}
+
+.banner_content b {
+    font-weight: 600;
+    font-size: 30px;
+}
+
+
+.story p {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 32px;
+    color: #171141;
+    margin-top: 10px;
+}
+
+.story .col-12 {
+    margin-bottom: 100px;
+}
+
+.left {
+    padding-right: 50px;
+}
+
+.card_large {
+    position: relative;
+    padding-top: 78px;
+    max-width: 500px;
+}
+
+.card_large .avatar {
+    position: absolute;
+    top: -50px;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.card_large h6 {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 26px;
+    color: #171141;
+}
+
+.text_small {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    color: #171141;
+    opacity: 0.5;
+}
+
+.card_large .stars {
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.card_large .card__top {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.story .quote {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 30px;
+    text-align: center;
+    color: #171141;
+    font-style: italic;
+}
+
+.subtext {
+    max-width: 600px;
+    margin: auto;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 32px;
+    text-align: center;
+    color: #171141;
+}
+
+.orange {
+    color: #FC851B;
+}
+
+.num_cont {
+    width: 178px;
+    height: 178px;
+    /* border: 20px solid rgba(23, 17, 65, 0.1); */
+    border-radius: 50%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 44px;
+    text-align: center;
+    color: #171141;
+    margin: auto;
+    margin-bottom: 20px;
+}
+
+.mb-md-80 {
+    margin-bottom: 100px;
+}
+
+.num_cont_1 {
+    background: url('img/circle1.svg');
+}
+
+.num_cont_2,
+.num_cont_3 {
+    background: url('img/circle2.svg');
+}
+
+
+.title_md {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 34px;
+    text-align: center;
+    color: #171141;
+    font-family: Inter, sans-serif;
+}
+
+.green {
+    color: #1A9B87;
+}
+
+.quote_big {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 32px;
+    padding: 0;
+}
+
+.quote_big:after,
+.quote_big:before {
+    color: #1A9B87;
+    opacity: 0.7;
+}
+
+
+
+.pr-md-5 {
+    padding-right: 30px;
+}
+
+.pl-md-5 {
+    padding-left: 30px;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.mx-900 {
+    max-width: 900px;
+    margin: auto;
+}
+
+.text_xl {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 34px;
+    color: #171141;
+
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.challenges .p_xl {
+    max-width: 750px;
+    margin: 50px auto 50px;
+
+}
+
+.mb-md-50 {
+    margin-bottom: 50px;
+}
+
+.quote_big span {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 32px;
+    text-align: center;
+    color: #171141;
+    opacity: 0.5;
+}
+
+.outcomes .row .col-md-4:nth-of-type(1) .title_md {
+    max-width: 200px;
+}
+
+.mx-300 {
+    max-width: 300px;
+}
+
+.mx-200 {
+    max-width: 200px;
+}
+
+/* .num_cont_1:after {
+    content: '';
+    width: 178px;
+    height: 178px;
+
+} */
+
 @media (max-width: 1024px) {
     .list-clients {
         flex-direction: column;
         gap: 20px;
+    }
+
+    .img_line span {
+        font-size: 52px;
     }
 
     .container__sm {
@@ -357,6 +656,37 @@ hr {
 @media (max-width: 768px) {
     .trusted .col-md-6 {
         text-align: center;
+    }
+
+    .card_large {
+        margin: 90px auto;
+        height: auto;
+    }
+
+    .solution .img_line {
+        margin-top: 40px;
+    }
+
+    .quote_big {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    .pl-md-5 {
+        padding-left: 0;
+    }
+
+    .pr-md-5 {
+        padding-right: 0;
+    }
+
+    .outcomes .col-md-4 {
+        margin-bottom: 50px !important;
+    }
+
+    .outcomes h2 {
+        padding-top: 20px;
+
     }
 
     .case p {
@@ -398,8 +728,41 @@ hr {
         padding: 60px 0 55px;
     }
 
+    .quote_big.m-auto {
+        margin: inherit !important;
+    }
+
+    .story .col-12 {
+        margin-bottom: 50px;
+    }
+
+    .left {
+        padding-right: 0px;
+    }
+
+    .story img {
+        max-width: 200px;
+    }
+
     .p_xl {
         margin: 60px auto 40px;
+    }
+
+    .mx-900 {
+        margin: 0 24px !important;
+    }
+
+    .img_line span {
+        font-size: 44px;
+    }
+
+    .img_line img {
+        margin-right: 10px;
+        max-width: 50px;
+    }
+
+    .mt-md-100 {
+        margin-top: 50px;
     }
 
     .title__xl {
