@@ -337,6 +337,8 @@ hr {
     background: #FC851B !important;
 }
 
+
+
 .separater_sm {
     width: 30px !important;
     margin: 0 !important;
@@ -352,8 +354,28 @@ hr {
     margin: 5px 0 0;
 }
 
+.orange:hover {
+    color: #fc851b;
+}
+
 .bg_darkgray {
     background: #E9E9E9;
+}
+
+.fs-22 {
+    font-size: 22px;
+}
+
+.impact {
+    padding-top: 50px;
+padding-bottom: 50px;
+}
+
+.impact h2 {
+    font-size: 25px;
+    line-height: 1.2;
+    max-width: 800px;
+    margin: auto;
 }
 
 .job {
@@ -419,6 +441,160 @@ hr {
     font-weight: 600;
     font-size: 30px;
 }
+
+.top-banner_watch {
+    background: url('./img/bg_list.png');
+    background-position: center;
+}
+
+.mw-200 {
+    max-width: 175px;
+    margin: 10px auto 40px;
+}
+
+.pb-50 {
+    padding-bottom: 50px;
+}
+
+.container__xs {
+    max-width: 600px;
+}
+
+.mw-160 {
+    max-width: 190px;
+    margin: 10px auto;
+}
+
+.img-des {
+    max-width: 200px;
+}
+
+.container__sm {
+    margin-left: auto;
+
+}
+
+.link_big {
+    color: #fc851b;
+    font-size: 20px;
+}
+
+.link_big:hover {
+    color: #fc851b;
+    opacity: 0.8;
+}
+
+.text_lg {
+    font-size: 30px;
+}
+
+.try-1 {
+    text-decoration: none;
+}
+
+.hr_gray {
+    background: #f4f1f1;
+    height: 3px !important;
+    width: 80%;
+    margin: 30px auto;
+}
+
+.mw-140 {
+    max-width: 140px;
+    margin: 10px auto;
+}
+
+.text_md {
+    font-size: 18px;
+}
+
+.text_sm {
+    font-size: 15px;
+}
+
+.text_big {
+    font-size: 22px;
+}
+
+.img_s1 {
+    max-height: 80px;
+}
+
+.border_bottom {
+    border-bottom: 1px solid #f4f1f1;
+}
+
+.color_gray {
+    color: #6a6772;
+}
+
+.top-banner_watch p{
+    font-size: 30px;
+    line-height: 1.1 !important;
+}
+
+
+/* Стилизация аккордеона */
+
+.accordion__summary::-webkit-details-marker,
+.accordion__summary::marker { 
+    display: none;
+}
+
+.accordion__item {
+    border-radius: 8px;
+    padding: 15px 32px;
+    font-size: 18px;
+}
+
+.accordion__item[open] {
+    padding-bottom: 16px;
+ }
+
+.accordion__item {
+    margin-bottom: 8px;
+}
+
+.accordion__item:last-child {
+    margin-bottom: 0;
+}
+
+.accordion__summary {
+    /* color: var(--black); */
+    list-style: none;
+    font-size: 18px;
+    position: relative;
+}
+
+.accordion__item {
+    margin-left: 20px;
+}
+
+.accordion__summary:hover {
+    cursor: pointer;
+}
+
+.accordion__arrow {
+    position: absolute;
+    top: 5px;
+    left: -50px;
+    transition: .5s all;
+}
+
+.accordion__item[open] .accordion__arrow{
+    transform: rotate(180deg);
+}
+
+.accordion__arrow {
+    width: 100%;
+    max-width: 28px;
+    height: auto;
+}
+
+.accordion__content {
+    margin-top: 20px;
+}
+
 
 
 .story p {
